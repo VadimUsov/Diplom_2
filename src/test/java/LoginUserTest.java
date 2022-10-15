@@ -37,38 +37,38 @@ public class LoginUserTest {
     @Test
     @DisplayName("User can login with all data")
     public void loginUserWithAllData() {
-        ValidatableResponse postUser = postOrdersWithAllData();
+        ValidatableResponse postUser = postLogin(UserForLogin.from(user));
 
         checkThatCanLogin(postUser);
     }
 
-    @Step("Send post request to \"/auth/login\" with all data")
-    public ValidatableResponse postOrdersWithAllData() {
-        userForLogin = UserForLogin.from(user);
-        ValidatableResponse postUser = userClient.loginUser(userForLogin);
-        return postUser;
+    @Test
+    @DisplayName("User can't login without email")
+    public void loginWithWrongEmail() {
+        ValidatableResponse postUser = postLogin(UserForLogin.withWrongEmail(user));
+
+        checkThatCanNotLoginWithoutAllData(postUser);
     }
+
+    @Test
+    @DisplayName("User can't login without password")
+    public void loginWithWrongPassword() {
+        ValidatableResponse postUser = postLogin(UserForLogin.withWrongPassword(user));
+
+        checkThatCanNotLoginWithoutAllData(postUser);
+    }
+
+    @Step("Send post request to \"/auth/login\"")
+    public ValidatableResponse postLogin(UserForLogin userForLogin) {
+        return userClient.loginUser(userForLogin);
+    }
+
 
     @Step("Check that user can be login with all data")
     public void checkThatCanLogin(ValidatableResponse postUser) {
         postUser
                 .statusCode(200)
                 .body("success", equalTo(true));
-    }
-
-    @Test
-    @DisplayName("User can't login without email")
-    public void loginWithWrongEmail() {
-        ValidatableResponse postUser = postOrdersWithoutEmail();
-
-        checkThatCanNotLoginWithoutAllData(postUser);
-    }
-
-    @Step("Send post request to \"/auth/login\" without email")
-    public ValidatableResponse postOrdersWithoutEmail() {
-        userForLogin = UserForLogin.withWrongEmail(user);
-        ValidatableResponse postUser = userClient.loginUser(userForLogin);
-        return postUser;
     }
 
     @Step("Check that user can't be login without all data")
@@ -78,21 +78,6 @@ public class LoginUserTest {
                 .body("success", equalTo(false))
                 .body("message", equalTo(userClient.getLOGIN_FAILED()));
 
-    }
-
-    @Test
-    @DisplayName("User can't login without password")
-    public void loginWithWrongPassword() {
-        ValidatableResponse postUser = postOrdersWithoutPassword();
-
-        checkThatCanNotLoginWithoutAllData(postUser);
-    }
-
-    @Step("Send post request to \"/auth/login\" without password")
-    public ValidatableResponse postOrdersWithoutPassword() {
-        userForLogin = UserForLogin.withWrongPassword(user);
-        ValidatableResponse postUser = userClient.loginUser(userForLogin);
-        return postUser;
     }
 }
 

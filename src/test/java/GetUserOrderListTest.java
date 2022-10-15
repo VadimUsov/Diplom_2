@@ -43,10 +43,17 @@ public class GetUserOrderListTest {
         checkOrdersWasGetting(getOrders);
     }
 
+    @Test
+    @DisplayName("Check that not authorized user not getting order list")
+    public void checkThatNotAuthorizedUserGettingOrderList() {
+        ValidatableResponse getOrders = sendGetOrdersWithoutAuth();
+
+        checkOrdersWasNotGetting(getOrders);
+    }
+
     @Step("Send get request to \"/orders\" with auth")
     public ValidatableResponse sendGetOrdersWithAuth() {
-        ValidatableResponse getOrders = orderClient.getOrderListWithAuth(bearerToken);
-        return getOrders;
+        return orderClient.getOrderListWithAuth(bearerToken);
     }
 
     @Step("Check that orders was getting")
@@ -57,18 +64,9 @@ public class GetUserOrderListTest {
                 .body("success", equalTo(true));
     }
 
-    @Test
-    @DisplayName("Check that not authorized user not getting order list")
-    public void checkThatNotAuthorizedUserGettingOrderList() {
-        ValidatableResponse getOrders = sendGetOrdersWithoutAuth();
-
-        checkOrdersWasNotGetting(getOrders);
-    }
-
     @Step("Send get request to \"/orders\" without auth")
     public ValidatableResponse sendGetOrdersWithoutAuth() {
-        ValidatableResponse getOrders = orderClient.getOrderListWithoutAuth();
-        return getOrders;
+        return orderClient.getOrderListWithoutAuth();
     }
 
     @Step("Check that orders wasn't getting and message is correct")
