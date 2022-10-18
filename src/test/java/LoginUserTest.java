@@ -14,8 +14,6 @@ public class LoginUserTest {
 
     User user;
 
-    UserForLogin userForLogin;
-
     UserClient userClient;
 
     String bearerToken;

@@ -97,8 +97,7 @@ public class CreateUserTest {
 
     @Step("Send post request to \"/auth/register\" second time")
     public ValidatableResponse sendPostWithAllDataSecondTime() {
-        ValidatableResponse postUserSecondTime = userClient.createUser(user);
-        return postUserSecondTime;
+        return userClient.createUser(user);
     }
 
     @Step("Check that create is failed and got correct message")
